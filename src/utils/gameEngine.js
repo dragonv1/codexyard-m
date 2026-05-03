@@ -94,6 +94,9 @@ function createEmptyUser(id) {
       rerollTokens: 0,
       goldenContracts: 0
     },
+    claimState: {
+      lastClaim: null
+    },
     skillTree: {
       paths: {
         finishing: 0,
@@ -127,6 +130,7 @@ function normalizeUser(user) {
   normalized.cooldowns = { ...createEmptyUser('tmp').cooldowns, ...(user.cooldowns || {}) };
   normalized.transfer = { ...createEmptyUser('tmp').transfer, ...(user.transfer || {}) };
   normalized.inventory = { ...createEmptyUser('tmp').inventory, ...(user.inventory || {}) };
+  normalized.claimState = { ...createEmptyUser('tmp').claimState, ...(user.claimState || {}) };
   normalized.skillTree = {
     ...createEmptyUser('tmp').skillTree,
     ...(user.skillTree || {}),
@@ -698,30 +702,120 @@ function applyFriendlyRewards(user, result) {
   return leveledUp;
 }
 
-function resolveClaim(user) {
-  const talent = pickRandom(CLAIM_TALENTS);
-  let text;
+function pickWeightedTalent(talents) {
+  const totalWeight = talents.reduce((acc, t) => acc + (t.weight || 1), 0);
+  let roll = Math.random() * totalWeight;
 
-  if (talent.reward === 'golden_contract') {
-    user.inventory.goldenContracts += 1;
-    text = 'Efsanevi odul! Golden Contract kazandin.';
-  } else if (talent.reward === 'reroll_token') {
-    user.inventory.rerollTokens += 1;
-    text = 'Reroll Token kazandin.';
-  } else {
-    user.skillTree.paths[talent.path] = clamp(user.skillTree.paths[talent.path] + 1, 0, 25);
-    user.skillTree.talents.push({ key: talent.key, gainedAt: now() });
+  for (const talent of talents) {
+    roll -= talent.weight || 1;
+    if (roll <= 0) return talent;
+  }
 
-    if (talent.overall) user.stats.overall = clamp(user.stats.overall + talent.overall, 40, 99);
-    if (talent.form) user.stats.form = clamp(user.stats.form + talent.form, 10, 100);
-    if (talent.morale) user.stats.morale = clamp(user.stats.morale + talent.morale, 10, 100);
+  return talents[talents.length - 1];
+}
 
-    text = `${talent.label} acildi. Skill tree gelisimi saglandi.`;
+function applyTalentToUser(user, talent, meta = {}) {
+  const pathDelta = talent.path ? 1 : 0;
+  const overallDelta = talent.overall || 0;
+  const formDelta = talent.form || 0;
+  const moraleDelta = talent.morale || 0;
+  const claimId = `claim_${now()}_${randomInt(100, 999)}`;
+
+  if (talent.path) {
+    user.skillTree.paths[talent.path] = clamp(user.skillTree.paths[talent.path] + pathDelta, 0, 25);
+  }
+
+  user.stats.overall = clamp(user.stats.overall + overallDelta, 40, 99);
+  user.stats.form = clamp(user.stats.form + formDelta, 10, 100);
+  user.stats.morale = clamp(user.stats.morale + moraleDelta, 10, 100);
+
+  user.skillTree.talents.push({
+    claimId,
+    key: talent.key,
+    gainedAt: now(),
+    source: meta.source || 'claim'
+  });
+
+  return {
+    claimId,
+    talentKey: talent.key,
+    talentLabel: talent.label,
+    talentRarity: talent.rarity,
+    path: talent.path || null,
+    pathDelta,
+    overallDelta,
+    formDelta,
+    moraleDelta,
+    source: meta.source || 'claim',
+    rerolledFrom: meta.rerolledFrom || null
+  };
+}
+
+function revertClaimEffect(user, claimRecord) {
+  if (!claimRecord) return;
+
+  if (claimRecord.path && claimRecord.pathDelta) {
+    user.skillTree.paths[claimRecord.path] = clamp(user.skillTree.paths[claimRecord.path] - claimRecord.pathDelta, 0, 25);
+  }
+
+  user.stats.overall = clamp(user.stats.overall - (claimRecord.overallDelta || 0), 40, 99);
+  user.stats.form = clamp(user.stats.form - (claimRecord.formDelta || 0), 10, 100);
+  user.stats.morale = clamp(user.stats.morale - (claimRecord.moraleDelta || 0), 10, 100);
+
+  if (claimRecord.claimId) {
+    user.skillTree.talents = user.skillTree.talents.filter((t) => t.claimId !== claimRecord.claimId);
+  }
+}
+
+function resolveClaim(user, options = {}) {
+  const guaranteedLegendary = Boolean(options.guaranteedLegendary);
+  const source = options.source || 'claim';
+  const allowReroll = Boolean(options.allowReroll);
+  const rerolledFrom = options.rerolledFrom || null;
+
+  const pool = guaranteedLegendary ? CLAIM_TALENTS.filter((t) => t.rarity === 'Efsanevi') : CLAIM_TALENTS;
+  const talent = pickWeightedTalent(pool.length > 0 ? pool : CLAIM_TALENTS);
+
+  const applied = applyTalentToUser(user, talent, { source, rerolledFrom });
+
+  if (allowReroll) {
+    user.claimState.lastClaim = applied;
   }
 
   return {
     talent,
-    text
+    text: `${talent.label} acildi. Skill tree gelisimi saglandi.`,
+    applied
+  };
+}
+
+function rerollLastClaim(user) {
+  const lastClaim = user.claimState?.lastClaim;
+  if (!lastClaim) {
+    return { ok: false, reason: 'no_last_claim' };
+  }
+
+  if (lastClaim.source !== 'claim' && lastClaim.source !== 'reroll') {
+    return { ok: false, reason: 'claim_not_rerollable' };
+  }
+
+  if (user.inventory.rerollTokens <= 0) {
+    return { ok: false, reason: 'no_reroll_token' };
+  }
+
+  revertClaimEffect(user, lastClaim);
+  user.inventory.rerollTokens -= 1;
+
+  const newResult = resolveClaim(user, {
+    source: 'reroll',
+    allowReroll: true,
+    rerolledFrom: lastClaim.talentKey
+  });
+
+  return {
+    ok: true,
+    previous: lastClaim,
+    result: newResult
   };
 }
 
@@ -989,6 +1083,7 @@ module.exports = {
   runFriendlyMatch,
   applyFriendlyRewards,
   resolveClaim,
+  rerollLastClaim,
   seasonSnapshotForUser,
   asProfileEmbed,
   pickRandom

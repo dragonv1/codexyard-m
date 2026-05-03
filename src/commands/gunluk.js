@@ -34,11 +34,18 @@ module.exports = {
     const xp = randomInt(20, 55);
 
     const money = salary + sponsor;
+    const rerollDrop = randomInt(1, 100) <= 35 ? 1 : 0;
+    const goldenDrop = randomInt(1, 100) <= 10 ? 1 : 0;
 
     user.stats.money += money;
+    user.inventory.rerollTokens += rerollDrop;
+    user.inventory.goldenContracts += goldenDrop;
     const levelUp = addXp(user, xp);
     setCooldown(user, 'daily');
-    pushHistory(user, `Gunluk odul alindi (+${money.toLocaleString('tr-TR')} ₺, +${xp} XP).`);
+    pushHistory(
+      user,
+      `Gunluk odul alindi (+${money.toLocaleString('tr-TR')} ₺, +${xp} XP, Reroll +${rerollDrop}, Golden +${goldenDrop}).`
+    );
 
     const unlocked = checkAutomaticAchievements(user);
     writeData(data);
@@ -51,7 +58,9 @@ module.exports = {
         { name: 'Sponsorluk', value: `+${sponsor.toLocaleString('tr-TR')} ₺`, inline: true },
         { name: 'Toplam', value: `+${money.toLocaleString('tr-TR')} ₺`, inline: true },
         { name: 'XP', value: `+${xp}`, inline: true },
-        { name: 'Seviye', value: levelUp > 0 ? `+${levelUp}` : 'Degismedi', inline: true }
+        { name: 'Seviye', value: levelUp > 0 ? `+${levelUp}` : 'Degismedi', inline: true },
+        { name: 'Reroll Token', value: rerollDrop > 0 ? `+${rerollDrop}` : 'Yok', inline: true },
+        { name: 'Golden Contract', value: goldenDrop > 0 ? `+${goldenDrop}` : 'Yok', inline: true }
       )
       .setFooter({ text: 'Yarin tekrar gelmeyi unutma' })
       .setTimestamp();

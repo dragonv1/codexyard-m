@@ -83,7 +83,8 @@ const CLAIM_TALENTS = [
     path: 'finishing',
     overall: 1,
     morale: 2,
-    rarity: 'Yaygin'
+    rarity: 'Yaygin',
+    weight: 40
   },
   {
     key: 'vision_boost',
@@ -91,7 +92,8 @@ const CLAIM_TALENTS = [
     path: 'vision',
     overall: 1,
     morale: 1,
-    rarity: 'Yaygin'
+    rarity: 'Yaygin',
+    weight: 36
   },
   {
     key: 'speed_boost',
@@ -99,19 +101,65 @@ const CLAIM_TALENTS = [
     path: 'speed',
     overall: 1,
     form: 3,
-    rarity: 'Yaygin'
+    rarity: 'Yaygin',
+    weight: 34
   },
   {
-    key: 'golden_contract',
-    label: 'Golden Contract',
-    reward: 'golden_contract',
-    rarity: 'Efsanevi'
+    key: 'playmaker_core',
+    label: 'Oyun Kurucu Cekirdegi',
+    path: 'vision',
+    overall: 1,
+    form: 2,
+    morale: 2,
+    rarity: 'Nadir',
+    weight: 16
   },
   {
-    key: 'reroll_token',
-    label: 'Reroll Token',
-    reward: 'reroll_token',
-    rarity: 'Nadir'
+    key: 'killer_instinct',
+    label: 'Golcu Icgudusu',
+    path: 'finishing',
+    overall: 1,
+    form: 2,
+    rarity: 'Nadir',
+    weight: 14
+  },
+  {
+    key: 'turbo_legs',
+    label: 'Turbo Bacaklar',
+    path: 'speed',
+    overall: 1,
+    form: 4,
+    rarity: 'Nadir',
+    weight: 12
+  },
+  {
+    key: 'legend_gold_striker',
+    label: 'Altin Forvet Icgudusu',
+    path: 'finishing',
+    overall: 2,
+    form: 3,
+    morale: 3,
+    rarity: 'Efsanevi',
+    weight: 4
+  },
+  {
+    key: 'legend_maestro_vision',
+    label: 'Maestro Oyun Gorus',
+    path: 'vision',
+    overall: 2,
+    form: 2,
+    morale: 4,
+    rarity: 'Efsanevi',
+    weight: 4
+  },
+  {
+    key: 'legend_blitz_speed',
+    label: 'Yildirim Sprint',
+    path: 'speed',
+    overall: 2,
+    form: 5,
+    rarity: 'Efsanevi',
+    weight: 4
   }
 ];
 

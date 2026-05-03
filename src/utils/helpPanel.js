@@ -18,7 +18,7 @@ function buildHelpPayload(prefix) {
     .addFields(
       { name: 'Baslangic', value: '`/başla` ` /karakter-oluştur` ` /profil`' },
       { name: 'Rekabet', value: '`/arena` ` /friendly` ` /lig` ` /sıralama`' },
-      { name: 'Gelisim', value: '`/antrenman` ` /maç` ` /claim` ` /günlük`' },
+      { name: 'Gelisim', value: '`/antrenman` ` /maç` ` /claim` ` /reroll` ` /golden-claim` ` /günlük`' },
       { name: 'Etkinlik', value: '`/çekiliş` ` /booster-çekiliş` ` /ticket-sistemi`' },
       { name: 'Ayarlar', value: '`/prefix` ` /cd` ` /yardım` ` /kariyer-sil`' },
       { name: 'Bot Sunucusu', value: 'https://discord.gg/TjKNHMhMXb' }

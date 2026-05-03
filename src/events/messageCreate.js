@@ -168,6 +168,9 @@ const commandAliasMap = {
   siralama: 'sıralama',
   gunluk: 'günlük',
   claim: 'claim',
+  reroll: 'reroll',
+  'golden-claim': 'golden-claim',
+  goldenclaim: 'golden-claim',
   cd: 'cd',
   friendly: 'friendly',
   arena: 'arena',
@@ -286,6 +289,8 @@ module.exports = {
         slashName === 'sıralama' ||
         slashName === 'günlük' ||
         slashName === 'claim' ||
+        slashName === 'reroll' ||
+        slashName === 'golden-claim' ||
         slashName === 'cd' ||
         slashName === 'arena' ||
         slashName === 'çekiliş' ||

@@ -13,7 +13,7 @@ const { errorEmbed } = require('../utils/guards');
 const { timeLeft } = require('../utils/helpers');
 
 module.exports = {
-  data: new SlashCommandBuilder().setName('claim').setDescription('Claim at ve rastgele yetenek/odul al'),
+  data: new SlashCommandBuilder().setName('claim').setDescription('Claim at ve sadece rastgele yetenek al'),
 
   async execute(interaction) {
     const data = readData();
@@ -36,7 +36,7 @@ module.exports = {
       });
     }
 
-    const result = resolveClaim(user);
+    const result = resolveClaim(user, { source: 'claim', allowReroll: true });
     setCooldown(user, 'claim');
     pushHistory(user, `Claim odulu alindi: ${result.talent.label}`);
     writeData(data);
@@ -51,6 +51,7 @@ module.exports = {
         { name: 'Reroll Token', value: String(user.inventory.rerollTokens), inline: true },
         { name: 'Golden Contract', value: String(user.inventory.goldenContracts), inline: true }
       )
+      .setFooter({ text: 'Claim sadece yetenek verir. Begenmezsen /reroll kullan.' })
       .setTimestamp();
 
     return interaction.reply({ embeds: [embed] });

@@ -38,7 +38,7 @@ async function handleClaimButton(interaction) {
     });
   }
 
-  const result = resolveClaim(user);
+  const result = resolveClaim(user, { source: 'claim', allowReroll: true });
   setCooldown(user, 'claim');
   pushHistory(user, `Claim odulu alindi: ${result.talent.label}`);
   writeData(data);
@@ -54,6 +54,7 @@ async function handleClaimButton(interaction) {
           { name: 'Odul', value: result.talent.label, inline: true },
           { name: 'Nadirlik', value: result.talent.rarity, inline: true }
         )
+        .setFooter({ text: 'Begenmezsen /reroll kullanabilirsin.' })
         .setTimestamp()
     ]
   });
