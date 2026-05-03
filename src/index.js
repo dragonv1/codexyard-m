@@ -10,6 +10,25 @@ const client = new Client({
 });
 
 let discordReady = false;
+const wsStateName = {
+  0: 'IDLE',
+  1: 'CONNECTING',
+  2: 'RESUMING',
+  3: 'READY',
+  4: 'NEARLY',
+  5: 'DISCONNECTED',
+  6: 'WAITING_FOR_GUILDS',
+  7: 'IDENTIFYING',
+  8: 'RECONNECTING'
+};
+
+process.on('unhandledRejection', (err) => {
+  console.error('Unhandled promise rejection:', err);
+});
+
+process.on('uncaughtException', (err) => {
+  console.error('Uncaught exception:', err);
+});
 
 client.on('error', (err) => {
   console.error('Discord client error:', err);
@@ -21,6 +40,22 @@ client.on('warn', (msg) => {
 
 client.on('shardError', (err) => {
   console.error('Discord shard error:', err);
+});
+
+client.on('shardReady', (id) => {
+  console.log(`Shard hazir: #${id}`);
+});
+
+client.on('shardDisconnect', (event, id) => {
+  console.error(`Shard baglanti koptu: #${id}, code=${event?.code ?? 'bilinmiyor'}`);
+});
+
+client.on('shardReconnecting', (id) => {
+  console.warn(`Shard yeniden baglaniyor: #${id}`);
+});
+
+client.on('shardResume', (id, replayed) => {
+  console.log(`Shard resume: #${id}, replayed=${replayed}`);
 });
 
 client.on('invalidated', () => {
@@ -59,16 +94,36 @@ for (const file of eventFiles) {
 
 ensureDataFile();
 
-if (!process.env.DISCORD_TOKEN) {
+const token = process.env.DISCORD_TOKEN?.trim();
+if (!token) {
   console.error('DISCORD_TOKEN bulunamadi. .env dosyasini kontrol et.');
   process.exit(1);
 }
 
+if (process.env.DISCORD_TOKEN !== token) {
+  console.warn('DISCORD_TOKEN bas/son bosluk iceriyor olabilir, trim uygulanarak login denenecek.');
+}
+
+console.log(`Discord token algilandi. Uzunluk: ${token.length}`);
+
 setTimeout(() => {
   if (!discordReady) {
-    console.error('Uyari: Bot 45 saniyede READY olmadi. Token/Discord erisimi kontrol edilmeli.');
+    const wsStatus = client.ws.status;
+    console.error(
+      `Uyari: Bot 45 saniyede READY olmadi. WS durum=${wsStatus} (${wsStateName[wsStatus] ?? 'BILINMIYOR'}).`
+    );
   }
 }, 45_000);
+
+const startupProbe = setInterval(() => {
+  if (discordReady) {
+    clearInterval(startupProbe);
+    return;
+  }
+
+  const wsStatus = client.ws.status;
+  console.log(`Startup probe: WS durum=${wsStatus} (${wsStateName[wsStatus] ?? 'BILINMIYOR'})`);
+}, 20_000);
 
 // Render gibi web servis ortamlari bir PORT uzerinden canli endpoint bekleyebilir.
 if (process.env.PORT) {
@@ -89,7 +144,7 @@ if (process.env.PORT) {
   });
 }
 
-client.login(process.env.DISCORD_TOKEN).catch((err) => {
+client.login(token).catch((err) => {
   console.error('Discord login failed:', err);
   process.exit(1);
 });
