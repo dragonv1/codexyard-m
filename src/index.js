@@ -64,28 +64,6 @@ if (!process.env.DISCORD_TOKEN) {
   process.exit(1);
 }
 
-// Baslangicta token/erisim kontrolu: Render logundan direkt sorunu gorebilmek icin.
-async function runStartupDiagnostics() {
-  try {
-    const response = await fetch('https://discord.com/api/v10/users/@me', {
-      headers: {
-        Authorization: `Bot ${process.env.DISCORD_TOKEN}`
-      }
-    });
-
-    if (!response.ok) {
-      const body = await response.text();
-      console.error(`Discord REST dogrulamasi basarisiz: HTTP ${response.status} - ${body}`);
-      return;
-    }
-
-    const me = await response.json();
-    console.log(`Discord REST dogrulama basarili: ${me.username}#${me.discriminator ?? '0000'} (${me.id})`);
-  } catch (err) {
-    console.error('Discord REST erisim hatasi:', err);
-  }
-}
-
 setTimeout(() => {
   if (!discordReady) {
     console.error('Uyari: Bot 45 saniyede READY olmadi. Token/Discord erisimi kontrol edilmeli.');
@@ -115,5 +93,3 @@ client.login(process.env.DISCORD_TOKEN).catch((err) => {
   console.error('Discord login failed:', err);
   process.exit(1);
 });
-
-runStartupDiagnostics();
