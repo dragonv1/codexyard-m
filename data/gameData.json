@@ -1,0 +1,560 @@
+{
+  "users": {
+    "1330138758535843840": {
+      "id": "1330138758535843840",
+      "role": "futbolcu",
+      "createdAt": 1777816137146,
+      "character": {
+        "name": "emir",
+        "age": 20,
+        "country": "Turkiye",
+        "position": "Forvet",
+        "team": "Trabzonspor",
+        "joinedAt": 1777816158682
+      },
+      "stats": {
+        "overall": 63,
+        "form": 53,
+        "morale": 53,
+        "teamChemistry": 55,
+        "money": 42129,
+        "xp": 9,
+        "level": 2,
+        "goals": 0,
+        "assists": 0,
+        "matches": 1,
+        "wins": 0,
+        "draws": 2,
+        "losses": 1,
+        "trainings": 1,
+        "injuries": 0,
+        "socialMedia": 3,
+        "pressure": 50,
+        "clubBudget": 1000000,
+        "transferBudget": 350000
+      },
+      "economy": {
+        "salaryBase": 2200,
+        "sponsorshipTier": 1,
+        "managerBonus": 0
+      },
+      "squad": {
+        "tactic": "5-3-2 Savunma",
+        "firstEleven": []
+      },
+      "status": {
+        "injuredUntil": 0
+      },
+      "cooldowns": {
+        "training": 1777816729882,
+        "match": 1777816192661,
+        "daily": 1777816167353,
+        "claim": 1777817791244,
+        "friendly": 1777824433055,
+        "arena": 1777824424426,
+        "vote": 0
+      },
+      "transfer": {
+        "activeOffer": null
+      },
+      "inventory": {
+        "rerollTokens": 0,
+        "goldenContracts": 0
+      },
+      "skillTree": {
+        "paths": {
+          "finishing": 0,
+          "vision": 1,
+          "speed": 0
+        },
+        "talents": [
+          {
+            "key": "vision_boost",
+            "gainedAt": 1777817791244
+          }
+        ]
+      },
+      "season": {
+        "leagueTier": 3,
+        "leaguePoints": 8,
+        "arenaPoints": 8,
+        "arenaWins": 0,
+        "arenaLosses": 1,
+        "friendlyWins": 0,
+        "friendlyLosses": 0,
+        "remainingAttacks": 5,
+        "lastAttackResetDay": "2026-05-03"
+      },
+      "achievements": [
+        "first_match",
+        "rich_player"
+      ],
+      "careerHistory": [
+        {
+          "time": 1777824433055,
+          "text": "Friendly: Bulut Jr karsisinda Berabere (1 - 1)."
+        },
+        {
+          "time": 1777824424426,
+          "text": "Arena: NPC Oyuncu 18 (undefined) karsisinda Maglubiyet (NaN - NaN)."
+        },
+        {
+          "time": 1777817791244,
+          "text": "Claim odulu alindi: Oyun Zekasi Kivilcimi"
+        },
+        {
+          "time": 1777816729882,
+          "text": "Antrenman tamamlandi (+5 form, +3 moral)."
+        },
+        {
+          "time": 1777816223154,
+          "text": "Transfer gerceklesti: Galatasaray -> Trabzonspor"
+        },
+        {
+          "time": 1777816211255,
+          "text": "Transfer teklifi geldi: Trabzonspor (31.716 ₺)"
+        },
+        {
+          "time": 1777816192661,
+          "text": "Mac: Galatasaray 0 - 0 Basaksehir | Berabere"
+        },
+        {
+          "time": 1777816167364,
+          "text": "Gunluk odul alindi (+1.998 ₺, +30 XP)."
+        },
+        {
+          "time": 1777816158682,
+          "text": "Karakter olusturuldu: emir (Forvet) - Galatasaray."
+        },
+        {
+          "time": 1777816137146,
+          "text": "Futbolcu olarak kariyer basladi."
+        }
+      ]
+    },
+    "877206318996402256": {
+      "id": "877206318996402256",
+      "role": "futbolcu",
+      "createdAt": 1777816548147,
+      "character": {
+        "name": "Bulut Jr",
+        "age": 18,
+        "country": "Brezilya",
+        "position": "Kanat",
+        "team": "Galatasaray",
+        "joinedAt": 1777816569307
+      },
+      "stats": {
+        "overall": 68,
+        "form": 81,
+        "morale": 84,
+        "teamChemistry": 59,
+        "money": 10105,
+        "xp": 67,
+        "level": 2,
+        "goals": 3,
+        "assists": 2,
+        "matches": 2,
+        "wins": 2,
+        "draws": 1,
+        "losses": 0,
+        "trainings": 2,
+        "injuries": 0,
+        "socialMedia": 4,
+        "pressure": 50,
+        "clubBudget": 1000000,
+        "transferBudget": 350000
+      },
+      "economy": {
+        "salaryBase": 2200,
+        "sponsorshipTier": 1,
+        "managerBonus": 0
+      },
+      "squad": {
+        "tactic": "5-3-2 Savunma",
+        "firstEleven": []
+      },
+      "status": {
+        "injuredUntil": 0
+      },
+      "cooldowns": {
+        "training": 1777824760130,
+        "match": 1777824681629,
+        "daily": 0,
+        "claim": 1777824417719,
+        "friendly": 0,
+        "arena": 0,
+        "vote": 0
+      },
+      "transfer": {
+        "activeOffer": null
+      },
+      "inventory": {
+        "rerollTokens": 0,
+        "goldenContracts": 0
+      },
+      "skillTree": {
+        "paths": {
+          "finishing": 0,
+          "vision": 0,
+          "speed": 1
+        },
+        "talents": [
+          {
+            "key": "speed_boost",
+            "gainedAt": 1777824417719
+          }
+        ]
+      },
+      "season": {
+        "leagueTier": 3,
+        "leaguePoints": 0,
+        "arenaPoints": 0,
+        "arenaWins": 0,
+        "arenaLosses": 0,
+        "friendlyWins": 0,
+        "friendlyLosses": 0,
+        "remainingAttacks": 6,
+        "lastAttackResetDay": "2026-05-03"
+      },
+      "achievements": [
+        "first_match",
+        "first_goal"
+      ],
+      "careerHistory": [
+        {
+          "time": 1777824760130,
+          "text": "Antrenman tamamlandi (ozel). +7 form, +13 moral."
+        },
+        {
+          "time": 1777824681629,
+          "text": "Mac: Galatasaray 2 - 1 Fenerbahce | Galibiyet"
+        },
+        {
+          "time": 1777824433055,
+          "text": "Friendly: emir karsisinda Berabere (1 - 1)."
+        },
+        {
+          "time": 1777824417719,
+          "text": "Claim odulu alindi: Hiz Kivilcimi"
+        },
+        {
+          "time": 1777816747060,
+          "text": "Antrenman tamamlandi (+9 form, +8 moral)."
+        },
+        {
+          "time": 1777816618015,
+          "text": "Mac: Galatasaray 2 - 0 Adana Demirspor | Galibiyet"
+        },
+        {
+          "time": 1777816569307,
+          "text": "Karakter olusturuldu: Bulut Jr (Kanat) - Galatasaray."
+        },
+        {
+          "time": 1777816548147,
+          "text": "Futbolcu olarak kariyer basladi."
+        }
+      ]
+    }
+  },
+  "league": {
+    "season": 1,
+    "clubs": {
+      "Galatasaray": {
+        "club": "Galatasaray",
+        "played": 3,
+        "wins": 2,
+        "draws": 1,
+        "losses": 0,
+        "goalsFor": 15,
+        "goalsAgainst": 21,
+        "points": 31
+      },
+      "Fenerbahce": {
+        "club": "Fenerbahce",
+        "played": 1,
+        "wins": 0,
+        "draws": 0,
+        "losses": 1,
+        "goalsFor": 16,
+        "goalsAgainst": 20,
+        "points": 27
+      },
+      "Besiktas": {
+        "club": "Besiktas",
+        "played": 0,
+        "wins": 0,
+        "draws": 0,
+        "losses": 0,
+        "goalsFor": 22,
+        "goalsAgainst": 14,
+        "points": 28
+      },
+      "Trabzonspor": {
+        "club": "Trabzonspor",
+        "played": 0,
+        "wins": 0,
+        "draws": 0,
+        "losses": 0,
+        "goalsFor": 12,
+        "goalsAgainst": 13,
+        "points": 13
+      },
+      "Basaksehir": {
+        "club": "Basaksehir",
+        "played": 1,
+        "wins": 0,
+        "draws": 1,
+        "losses": 0,
+        "goalsFor": 19,
+        "goalsAgainst": 17,
+        "points": 15
+      },
+      "Bursaspor": {
+        "club": "Bursaspor",
+        "played": 0,
+        "wins": 0,
+        "draws": 0,
+        "losses": 0,
+        "goalsFor": 17,
+        "goalsAgainst": 18,
+        "points": 21
+      },
+      "Sivasspor": {
+        "club": "Sivasspor",
+        "played": 0,
+        "wins": 0,
+        "draws": 0,
+        "losses": 0,
+        "goalsFor": 21,
+        "goalsAgainst": 12,
+        "points": 30
+      },
+      "Konyaspor": {
+        "club": "Konyaspor",
+        "played": 0,
+        "wins": 0,
+        "draws": 0,
+        "losses": 0,
+        "goalsFor": 18,
+        "goalsAgainst": 20,
+        "points": 30
+      },
+      "Antalyaspor": {
+        "club": "Antalyaspor",
+        "played": 0,
+        "wins": 0,
+        "draws": 0,
+        "losses": 0,
+        "goalsFor": 11,
+        "goalsAgainst": 8,
+        "points": 23
+      },
+      "Adana Demirspor": {
+        "club": "Adana Demirspor",
+        "played": 1,
+        "wins": 0,
+        "draws": 0,
+        "losses": 1,
+        "goalsFor": 16,
+        "goalsAgainst": 15,
+        "points": 16
+      }
+    }
+  },
+  "npcPlayers": [
+    {
+      "id": "npc_1",
+      "name": "NPC Oyuncu 1",
+      "overall": 84,
+      "goals": 0,
+      "assists": 11,
+      "level": 6,
+      "club": "Adana Demirspor"
+    },
+    {
+      "id": "npc_2",
+      "name": "NPC Oyuncu 2",
+      "overall": 86,
+      "goals": 11,
+      "assists": 8,
+      "level": 8,
+      "club": "Fenerbahce"
+    },
+    {
+      "id": "npc_3",
+      "name": "NPC Oyuncu 3",
+      "overall": 62,
+      "goals": 9,
+      "assists": 5,
+      "level": 7,
+      "club": "Konyaspor"
+    },
+    {
+      "id": "npc_4",
+      "name": "NPC Oyuncu 4",
+      "overall": 62,
+      "goals": 13,
+      "assists": 10,
+      "level": 1,
+      "club": "Besiktas"
+    },
+    {
+      "id": "npc_5",
+      "name": "NPC Oyuncu 5",
+      "overall": 77,
+      "goals": 9,
+      "assists": 1,
+      "level": 8,
+      "club": "Sivasspor"
+    },
+    {
+      "id": "npc_6",
+      "name": "NPC Oyuncu 6",
+      "overall": 83,
+      "goals": 3,
+      "assists": 5,
+      "level": 3,
+      "club": "Antalyaspor"
+    },
+    {
+      "id": "npc_7",
+      "name": "NPC Oyuncu 7",
+      "overall": 81,
+      "goals": 2,
+      "assists": 5,
+      "level": 10,
+      "club": "Basaksehir"
+    },
+    {
+      "id": "npc_8",
+      "name": "NPC Oyuncu 8",
+      "overall": 74,
+      "goals": 9,
+      "assists": 2,
+      "level": 1,
+      "club": "Fenerbahce"
+    },
+    {
+      "id": "npc_9",
+      "name": "NPC Oyuncu 9",
+      "overall": 66,
+      "goals": 15,
+      "assists": 10,
+      "level": 3,
+      "club": "Konyaspor"
+    },
+    {
+      "id": "npc_10",
+      "name": "NPC Oyuncu 10",
+      "overall": 86,
+      "goals": 1,
+      "assists": 11,
+      "level": 11,
+      "club": "Adana Demirspor"
+    },
+    {
+      "id": "npc_11",
+      "name": "NPC Oyuncu 11",
+      "overall": 60,
+      "goals": 6,
+      "assists": 4,
+      "level": 12,
+      "club": "Besiktas"
+    },
+    {
+      "id": "npc_12",
+      "name": "NPC Oyuncu 12",
+      "overall": 83,
+      "goals": 8,
+      "assists": 6,
+      "level": 6,
+      "club": "Bursaspor"
+    },
+    {
+      "id": "npc_13",
+      "name": "NPC Oyuncu 13",
+      "overall": 83,
+      "goals": 16,
+      "assists": 10,
+      "level": 9,
+      "club": "Sivasspor"
+    },
+    {
+      "id": "npc_14",
+      "name": "NPC Oyuncu 14",
+      "overall": 70,
+      "goals": 11,
+      "assists": 3,
+      "level": 9,
+      "club": "Antalyaspor"
+    },
+    {
+      "id": "npc_15",
+      "name": "NPC Oyuncu 15",
+      "overall": 77,
+      "goals": 18,
+      "assists": 1,
+      "level": 7,
+      "club": "Antalyaspor"
+    },
+    {
+      "id": "npc_16",
+      "name": "NPC Oyuncu 16",
+      "overall": 63,
+      "goals": 15,
+      "assists": 5,
+      "level": 4,
+      "club": "Bursaspor"
+    },
+    {
+      "id": "npc_17",
+      "name": "NPC Oyuncu 17",
+      "overall": 61,
+      "goals": 15,
+      "assists": 11,
+      "level": 4,
+      "club": "Trabzonspor"
+    },
+    {
+      "id": "npc_18",
+      "name": "NPC Oyuncu 18",
+      "overall": 66,
+      "goals": 18,
+      "assists": 2,
+      "level": 5,
+      "club": "Trabzonspor"
+    },
+    {
+      "id": "npc_19",
+      "name": "NPC Oyuncu 19",
+      "overall": 86,
+      "goals": 2,
+      "assists": 11,
+      "level": 12,
+      "club": "Sivasspor"
+    },
+    {
+      "id": "npc_20",
+      "name": "NPC Oyuncu 20",
+      "overall": 67,
+      "goals": 15,
+      "assists": 10,
+      "level": 1,
+      "club": "Antalyaspor"
+    }
+  ],
+  "seasonSystem": {
+    "currentSeason": 1,
+    "durationDays": 7,
+    "startedAt": 1777817691001,
+    "endsAt": 1778422491001,
+    "history": []
+  },
+  "worldNews": [],
+  "guildSettings": {
+    "1500494277141074023": {
+      "prefix": "!"
+    }
+  }
+}

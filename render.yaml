@@ -1,0 +1,19 @@
+﻿services:
+  - type: web
+    name: discord-futbol-rp-bot
+    runtime: node
+    autoDeploy: true
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /health
+    envVars:
+      - key: DISCORD_TOKEN
+        sync: false
+      - key: CLIENT_ID
+        sync: false
+      - key: GUILD_ID
+        sync: false
+      - key: OWNER_USER_ID
+        value: "1330138758535843840"
+      - key: DEPLOY_SCOPE
+        value: global
