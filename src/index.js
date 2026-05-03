@@ -9,6 +9,22 @@ const client = new Client({
   intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent]
 });
 
+client.on('error', (err) => {
+  console.error('Discord client error:', err);
+});
+
+client.on('warn', (msg) => {
+  console.warn('Discord warning:', msg);
+});
+
+client.on('shardError', (err) => {
+  console.error('Discord shard error:', err);
+});
+
+client.on('invalidated', () => {
+  console.error('Discord session invalidated. Token/connection kontrol et.');
+});
+
 client.commands = new Collection();
 
 const commandsPath = path.join(__dirname, 'commands');
@@ -61,4 +77,7 @@ if (process.env.PORT) {
   });
 }
 
-client.login(process.env.DISCORD_TOKEN);
+client.login(process.env.DISCORD_TOKEN).catch((err) => {
+  console.error('Discord login failed:', err);
+  process.exit(1);
+});
