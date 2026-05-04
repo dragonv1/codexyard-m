@@ -5,6 +5,27 @@ const { timeLeft } = require('../utils/helpers');
 const { handleGiveawayJoinInteraction } = require('../utils/giveawaySystem');
 const { handleTicketCategorySelection, handleTicketCloseButton } = require('../utils/ticketSystem');
 
+function installSafeReplyAdapter(interaction) {
+  const rawReply = interaction.reply.bind(interaction);
+  const rawFollowUp = interaction.followUp.bind(interaction);
+  const rawEditReply = interaction.editReply.bind(interaction);
+
+  interaction.reply = async (payload) => {
+    if (interaction.deferred && !interaction.replied) {
+      if (payload && typeof payload === 'object' && Object.prototype.hasOwnProperty.call(payload, 'ephemeral')) {
+        return rawFollowUp(payload);
+      }
+      return rawEditReply(payload);
+    }
+
+    if (interaction.replied) {
+      return rawFollowUp(payload);
+    }
+
+    return rawReply(payload);
+  };
+}
+
 async function handleClaimButton(interaction) {
   const data = readData();
   ensureSeasonSystem(data);
@@ -88,8 +109,22 @@ module.exports = {
 
     if (!interaction.isChatInputCommand()) return;
 
+    installSafeReplyAdapter(interaction);
+
+    // Komutlar 3 sn sınırına takılmasın diye otomatik defer güvenliği.
+    const deferTimer = setTimeout(async () => {
+      if (!interaction.deferred && !interaction.replied) {
+        try {
+          await interaction.deferReply();
+        } catch {
+          // Sessiz geç: interaction çoktan cevaplanmış olabilir.
+        }
+      }
+    }, 1000);
+
     const command = interaction.client.commands.get(interaction.commandName);
     if (!command) {
+      clearTimeout(deferTimer);
       return interaction.reply({
         ephemeral: true,
         embeds: [
@@ -122,6 +157,8 @@ module.exports = {
       } else {
         await interaction.reply(payload);
       }
+    } finally {
+      clearTimeout(deferTimer);
     }
   }
 };
