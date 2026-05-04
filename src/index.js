@@ -1,4 +1,5 @@
 ﻿require('dotenv').config();
+const http = require('node:http');
 const fs = require('node:fs');
 const path = require('node:path');
 const { Client, Collection, GatewayIntentBits } = require('discord.js');
@@ -123,6 +124,27 @@ const startupProbe = setInterval(() => {
   const wsStatus = client.ws.status;
   console.log(`Startup probe: WS durum=${wsStatus} (${wsStateName[wsStatus] ?? 'BILINMIYOR'})`);
 }, 20_000);
+
+// Render Web Service icin port dinlenmesi gerekli.
+if (process.env.PORT) {
+  const port = Number(process.env.PORT);
+  const healthServer = http.createServer((req, res) => {
+    const requestPath = String(req.url || '').split('?')[0];
+
+    if (requestPath === '/health') {
+      res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+      res.end(JSON.stringify({ ok: true, service: 'discord-futbol-rp-bot' }));
+      return;
+    }
+
+    res.writeHead(200, { 'Content-Type': 'text/plain; charset=utf-8' });
+    res.end('Discord bot servisi acik.');
+  });
+
+  healthServer.listen(port, () => {
+    console.log(`Health endpoint acik: http://0.0.0.0:${port}/health`);
+  });
+}
 
 client.login(token).catch((err) => {
   console.error('Discord login failed:', err);
