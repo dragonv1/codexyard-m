@@ -48,22 +48,18 @@ client.on('shardReady', (id) => {
 
 client.on('shardDisconnect', (event, id) => {
   console.error(`Shard baglanti koptu: #${id}, code=${event?.code ?? 'bilinmiyor'}`);
-  discordReady = false;
 });
 
 client.on('shardReconnecting', (id) => {
   console.warn(`Shard yeniden baglaniyor: #${id}`);
-  discordReady = false;
 });
 
 client.on('shardResume', (id, replayed) => {
   console.log(`Shard resume: #${id}, replayed=${replayed}`);
-  discordReady = true;
 });
 
 client.on('invalidated', () => {
   console.error('Discord session invalidated. Token/connection kontrol et.');
-  discordReady = false;
 });
 
 client.once('ready', () => {
@@ -133,27 +129,14 @@ const startupProbe = setInterval(() => {
 if (process.env.PORT) {
   const port = Number(process.env.PORT);
   const healthServer = http.createServer((req, res) => {
-    const wsStatus = client.ws.status;
-    const wsName = wsStateName[wsStatus] ?? 'BILINMIYOR';
-
     if (req.url === '/health') {
-      const ok = Boolean(discordReady);
-      res.writeHead(ok ? 200 : 503, { 'Content-Type': 'application/json; charset=utf-8' });
-      res.end(
-        JSON.stringify({
-          ok,
-          service: 'discord-futbol-rp-bot',
-          discordReady,
-          wsStatus,
-          wsState: wsName,
-          timestamp: Date.now()
-        })
-      );
+      res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+      res.end(JSON.stringify({ ok: true, service: 'discord-futbol-rp-bot' }));
       return;
     }
 
     res.writeHead(200, { 'Content-Type': 'text/plain; charset=utf-8' });
-    res.end(discordReady ? 'Discord bot aktif.' : `Discord bot bagli degil. WS=${wsName}`);
+    res.end('Discord bot aktif.');
   });
 
   healthServer.listen(port, () => {
