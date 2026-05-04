@@ -22,10 +22,6 @@ const wsStateName = {
   8: 'RECONNECTING'
 };
 
-function isDiscordReady() {
-  return discordReady || client.ws.status === 3;
-}
-
 process.on('unhandledRejection', (err) => {
   console.error('Unhandled promise rejection:', err);
 });
@@ -70,7 +66,7 @@ client.on('invalidated', () => {
   discordReady = false;
 });
 
-client.once('clientReady', () => {
+client.once('ready', () => {
   discordReady = true;
 });
 
@@ -115,7 +111,7 @@ if (process.env.DISCORD_TOKEN !== token) {
 console.log(`Discord token algilandi. Uzunluk: ${token.length}`);
 
 setTimeout(() => {
-  if (!isDiscordReady()) {
+  if (!discordReady) {
     const wsStatus = client.ws.status;
     console.error(
       `Uyari: Bot 45 saniyede READY olmadi. WS durum=${wsStatus} (${wsStateName[wsStatus] ?? 'BILINMIYOR'}).`
@@ -124,7 +120,7 @@ setTimeout(() => {
 }, 45_000);
 
 const startupProbe = setInterval(() => {
-  if (isDiscordReady()) {
+  if (discordReady) {
     clearInterval(startupProbe);
     return;
   }
@@ -141,7 +137,7 @@ if (process.env.PORT) {
     const wsName = wsStateName[wsStatus] ?? 'BILINMIYOR';
 
     if (req.url === '/health') {
-      const ok = isDiscordReady();
+      const ok = Boolean(discordReady);
       res.writeHead(ok ? 200 : 503, { 'Content-Type': 'application/json; charset=utf-8' });
       res.end(
         JSON.stringify({
@@ -157,7 +153,7 @@ if (process.env.PORT) {
     }
 
     res.writeHead(200, { 'Content-Type': 'text/plain; charset=utf-8' });
-    res.end(isDiscordReady() ? 'Discord bot aktif.' : `Discord bot bagli degil. WS=${wsName}`);
+    res.end(discordReady ? 'Discord bot aktif.' : `Discord bot bagli degil. WS=${wsName}`);
   });
 
   healthServer.listen(port, () => {
