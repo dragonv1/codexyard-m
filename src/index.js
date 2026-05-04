@@ -139,9 +139,8 @@ if (process.env.PORT) {
   const healthServer = http.createServer((req, res) => {
     const wsStatus = client.ws.status;
     const wsName = wsStateName[wsStatus] ?? 'BILINMIYOR';
-    const requestPath = String(req.url || '').split('?')[0];
 
-    if (requestPath === '/health') {
+    if (req.url === '/health') {
       const ok = isDiscordReady();
       res.writeHead(ok ? 200 : 503, { 'Content-Type': 'application/json; charset=utf-8' });
       res.end(
