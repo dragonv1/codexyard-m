@@ -67,6 +67,9 @@ function mapYonetimOp(raw) {
   if (['transfer-butce', 'transferbutce', 'butce'].includes(v)) return 'transfer-butce';
   if (['hoca-al', 'hocaal', 'iseal'].includes(v)) return 'hoca-al';
   if (['hoca-kov', 'hocakov', 'kov'].includes(v)) return 'hoca-kov';
+  if (['altyapi', 'altyapi-yatirimi'].includes(v)) return 'altyapi-yatirimi';
+  if (['tesis', 'tesis-gelistir'].includes(v)) return 'tesis-gelistir';
+  if (['prim', 'prim-dagit'].includes(v)) return 'prim-dagit';
   return null;
 }
 
@@ -168,6 +171,8 @@ const commandAliasMap = {
   siralama: 'sıralama',
   gunluk: 'günlük',
   claim: 'claim',
+  penalti: 'penaltı',
+  'penaltı': 'penaltı',
   reroll: 'reroll',
   'golden-claim': 'golden-claim',
   goldenclaim: 'golden-claim',
@@ -289,6 +294,7 @@ module.exports = {
         slashName === 'sıralama' ||
         slashName === 'günlük' ||
         slashName === 'claim' ||
+        slashName === 'penaltı' ||
         slashName === 'reroll' ||
         slashName === 'golden-claim' ||
         slashName === 'cd' ||
@@ -324,7 +330,9 @@ module.exports = {
       if (slashName === 'yönetim') {
         const islem = mapYonetimOp(args[0]);
         if (!islem) {
-          return message.reply(`Kullanim: ${prefix}yonetim <sponsor|transfer-butce|hoca-al|hoca-kov> [miktar]`);
+          return message.reply(
+            `Kullanim: ${prefix}yonetim <sponsor|transfer-butce|hoca-al|hoca-kov|altyapi-yatirimi|tesis-gelistir|prim-dagit> [miktar]`
+          );
         }
 
         const miktar = args[1] ? Number(args[1]) : null;

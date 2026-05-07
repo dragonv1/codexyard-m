@@ -16,6 +16,7 @@ const { randomInt, pickRandom, clamp, dayKey } = require('./helpers');
 
 const COOLDOWNS = {
   training: 1000 * 60 * 60,
+  penalty: 1000 * 60 * 60,
   match: 1000 * 60 * 20,
   daily: 1000 * 60 * 60 * 24,
   claim: 1000 * 60 * 30,
@@ -80,6 +81,7 @@ function createEmptyUser(id) {
     },
     cooldowns: {
       training: 0,
+      penalty: 0,
       match: 0,
       daily: 0,
       claim: 0,
@@ -203,7 +205,26 @@ function ensureSeasonSystem(data) {
 }
 
 function ensureNpcPlayers(data) {
-  if (Array.isArray(data.npcPlayers) && data.npcPlayers.length > 0) return;
+  if (Array.isArray(data.npcPlayers) && data.npcPlayers.length > 0) {
+    data.npcPlayers = data.npcPlayers.map((npc, i) => {
+      const archetype = pickRandom(NPC_ARCHETYPES);
+      return {
+        id: npc.id || `npc_${i + 1}`,
+        name: npc.name || `NPC Oyuncu ${i + 1}`,
+        archetype: npc.archetype || archetype.key,
+        archetypeTitle: npc.archetypeTitle || archetype.title,
+        archetypeFlavor: npc.archetypeFlavor || archetype.flavor,
+        overall: clamp(Number(npc.overall || randomInt(60, 90)), 45, 99),
+        goals: Number(npc.goals || randomInt(0, 18)),
+        assists: Number(npc.assists || randomInt(0, 12)),
+        level: Number(npc.level || randomInt(1, 12)),
+        club: npc.club || pickRandom(CLUBS),
+        attack: clamp(Number(npc.attack || randomInt(55, 95)), 40, 120),
+        defense: clamp(Number(npc.defense || randomInt(50, 90)), 35, 120)
+      };
+    });
+    return;
+  }
 
   data.npcPlayers = Array.from({ length: 24 }, (_, i) => {
     const archetype = pickRandom(NPC_ARCHETYPES);
@@ -610,6 +631,44 @@ function rejectTransfer(user) {
 }
 
 function runFriendlyMatch(user, opponent) {
+  const myOverall = user.stats.overall;
+  const rivalOverall = opponent.stats.overall;
+
+  if (myOverall >= 90 && rivalOverall < 90) {
+    const myGoals = randomInt(2, 5);
+    const opGoals = randomInt(0, 1);
+    return {
+      scoreline: `${myGoals} - ${opGoals}`,
+      result: 'Galibiyet',
+      xpGain: 45,
+      moneyGain: 2100,
+      arenaDelta: 28
+    };
+  }
+
+  if (rivalOverall >= 90 && myOverall < 90) {
+    const myGoals = randomInt(0, 1);
+    const opGoals = randomInt(2, 5);
+    return {
+      scoreline: `${myGoals} - ${opGoals}`,
+      result: 'Maglubiyet',
+      xpGain: 15,
+      moneyGain: 500,
+      arenaDelta: -8
+    };
+  }
+
+  if (myOverall >= 90 && rivalOverall >= 90) {
+    const goals = randomInt(1, 3);
+    return {
+      scoreline: `${goals} - ${goals}`,
+      result: 'Berabere',
+      xpGain: 32,
+      moneyGain: 1300,
+      arenaDelta: 10
+    };
+  }
+
   const mePower = user.stats.overall + Math.floor(user.stats.form / 3) + user.skillTree.paths.vision;
   const opPower = opponent.stats.overall + Math.floor(opponent.stats.form / 3) + opponent.skillTree.paths.finishing;
 
@@ -637,6 +696,28 @@ function runFriendlyMatch(user, opponent) {
 
 function runArenaMatch(user, npc) {
   resetDailyCaps(user);
+
+  if (user.stats.overall >= 95) {
+    const myGoals = randomInt(2, 5);
+    const npcGoals = randomInt(0, 1);
+    const arenaDelta = randomInt(22, 34);
+    const xpGain = randomInt(45, 72);
+    const moneyGain = randomInt(2200, 3600);
+
+    user.season.remainingAttacks = clamp(user.season.remainingAttacks - 1, 0, MAX_ARENA_ATTACKS);
+    user.season.arenaWins += 1;
+
+    return {
+      scoreline: `${myGoals} - ${npcGoals}`,
+      result: 'Galibiyet',
+      arenaDelta,
+      xpGain,
+      moneyGain,
+      npcTitle: npc.archetypeTitle,
+      npcFlavor: npc.archetypeFlavor,
+      npcName: npc.name
+    };
+  }
 
   const myAttack = user.stats.overall + Math.floor(user.stats.form / 2) + user.skillTree.paths.finishing * 2;
   const myDefense = user.stats.teamChemistry + user.skillTree.paths.vision;
@@ -666,6 +747,55 @@ function runArenaMatch(user, npc) {
     npcTitle: npc.archetypeTitle,
     npcFlavor: npc.archetypeFlavor,
     npcName: npc.name
+  };
+}
+
+function runPenaltyChallenge(user) {
+  const shots = [];
+  const totalShots = 5;
+  const finishing = user.skillTree.paths.finishing || 0;
+  const formFactor = Math.floor((user.stats.form - 50) / 8);
+  const moraleFactor = Math.floor((user.stats.morale - 50) / 10);
+  const baseChance = clamp(50 + (user.stats.overall - 60) + finishing * 2 + formFactor + moraleFactor, 35, 94);
+
+  let goals = 0;
+  for (let i = 1; i <= totalShots; i += 1) {
+    const chance = clamp(baseChance + randomInt(-8, 10), 25, 98);
+    const roll = randomInt(1, 100);
+    const scored = roll <= chance;
+    if (scored) goals += 1;
+
+    const comment = scored
+      ? pickRandom(['Top aglarda!', 'Kaleci ters koseye yatti.', 'Buz gibi penaltı!'])
+      : pickRandom(['Kaleci cikardi!', 'Direkten dondu!', 'Top auta gitti.']);
+    shots.push(`${i}. vurus: ${scored ? '⚽ GOL' : '❌ KACTI'} - ${comment}`);
+  }
+
+  if (user.stats.overall >= 90 && goals < 4) {
+    goals = 4;
+  }
+
+  const result = goals >= 4 ? 'Ust Duzey' : goals >= 3 ? 'Basarili' : goals >= 2 ? 'Orta' : 'Zayif';
+  const xpGain = goals >= 4 ? randomInt(40, 60) : goals >= 3 ? randomInt(28, 45) : randomInt(18, 30);
+  const moneyGain = goals >= 4 ? randomInt(1800, 2800) : goals >= 3 ? randomInt(1000, 1700) : randomInt(500, 1000);
+  const formGain = goals >= 4 ? randomInt(2, 5) : goals >= 3 ? randomInt(1, 3) : randomInt(0, 2);
+  const moraleGain = goals >= 4 ? randomInt(2, 4) : goals >= 3 ? randomInt(1, 2) : randomInt(-1, 1);
+
+  user.stats.money += moneyGain;
+  user.stats.form = clamp(user.stats.form + formGain, 10, 100);
+  user.stats.morale = clamp(user.stats.morale + moraleGain, 10, 100);
+  const leveledUp = addXp(user, xpGain);
+
+  return {
+    totalShots,
+    goals,
+    result,
+    shots,
+    xpGain,
+    moneyGain,
+    formGain,
+    moraleGain,
+    leveledUp
   };
 }
 
@@ -1082,6 +1212,7 @@ module.exports = {
   applyArenaRewards,
   runFriendlyMatch,
   applyFriendlyRewards,
+  runPenaltyChallenge,
   resolveClaim,
   rerollLastClaim,
   seasonSnapshotForUser,

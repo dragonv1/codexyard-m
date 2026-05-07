@@ -19,6 +19,7 @@ module.exports = {
     writeData(data);
 
     const claim = canUseCooldown(user, 'claim');
+    const penalty = canUseCooldown(user, 'penalty');
     const friendly = canUseCooldown(user, 'friendly');
     const arena = canUseCooldown(user, 'arena');
     const vote = canUseCooldown(user, 'vote');
@@ -35,6 +36,10 @@ module.exports = {
             `${statusLine(claim)}\n` +
             `↳ Reroll Tokens: ${user.inventory.rerollTokens}\n` +
             `↳ Golden Contracts: ${user.inventory.goldenContracts}`
+        },
+        {
+          name: '🥅 Penalti',
+          value: statusLine(penalty)
         },
         {
           name: '🏁 Friendly',

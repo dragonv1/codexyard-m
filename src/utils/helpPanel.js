@@ -18,7 +18,9 @@ function buildHelpPayload(prefix) {
     .addFields(
       { name: 'Baslangic', value: '`/başla` ` /karakter-oluştur` ` /profil`' },
       { name: 'Rekabet', value: '`/arena` ` /friendly` ` /lig` ` /sıralama`' },
-      { name: 'Gelisim', value: '`/antrenman` ` /maç` ` /claim` ` /reroll` ` /golden-claim` ` /günlük`' },
+      { name: 'Gelisim', value: '`/antrenman` ` /penaltı` ` /maç` ` /claim` ` /reroll` ` /golden-claim` ` /günlük`' },
+      { name: 'Teknik Direktör', value: '`/taktik` ` /maç` (TD modu) | Ilk 11 + takim toplantisi + baski yonetimi' },
+      { name: 'Kulup Sahibi', value: '`/yönetim` ` /maç` (Baskan modu) | Sponsor + altyapi + tesis + prim + hoca kararları' },
       { name: 'Etkinlik', value: '`/çekiliş` ` /booster-çekiliş` ` /ticket-sistemi`' },
       { name: 'Ayarlar', value: '`/prefix` ` /cd` ` /yardım` ` /kariyer-sil`' },
       { name: 'Bot Sunucusu', value: 'https://discord.gg/TjKNHMhMXb' }
